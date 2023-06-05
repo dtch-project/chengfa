@@ -2,6 +2,8 @@
 import sys
 import pygame,random
 
+
+
 pygame.init()
 fps = 60
 fpsClock = pygame.time.Clock()
@@ -11,6 +13,9 @@ score = 0
 spawnSpeed = 80
 screen = pygame.display.set_mode((_width,_height),32)
 screen.fill((255,255,255))
+gamee = True 
+lose = False
+endpoint = 0
 
 arrowName=["right", "left", "up", "down"]
 arrowList=[]
@@ -18,6 +23,12 @@ arrowList=[]
 nInfo=pygame.display.Info()
 full_screen_size = f_width,f_height = nInfo.current_w,nInfo.current_h
 
+
+def show_words(words_str):
+    font = pygame.font.SysFont("Times New Roman", 100)
+    text = font.render(words_str, True, (0, 0, 255), (255, 255, 255))
+    text_rect = text.get_rect(center=((f_width/100)*50, (f_height/100)*50))
+    screen.blit(text, text_rect)
 
 class arrow:
     global f_height, f_width
@@ -49,7 +60,7 @@ PLeft=True
 speedUp=False
 speed=0.25
 
-while  True:
+while  gamee == True:
     fpsClock.tick(fps)
     pygame.display.flip()
     screen.fill((R,G,B))
@@ -113,4 +124,12 @@ while  True:
         i.move(speed)
         if i.x<0 or i.x>100 or i.y>100 or i.y<0:
             print(f"score:{score}")
+            endpoint = score
+            lose = True
+            gamee = False
             sys.exit()
+while lose == True:
+    fpsClock.tick(fps)
+    screen.fill((R,G,B))
+    show_words(f"YOULOSE,{endpoint}")
+    pygame.display.flip()
