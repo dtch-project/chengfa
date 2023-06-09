@@ -24,10 +24,25 @@ nInfo=pygame.display.Info()
 full_screen_size = f_width,f_height = nInfo.current_w,nInfo.current_h
 
 
-def show_words(words_str):
-    font = pygame.font.SysFont("Times New Roman", 100)
-    text = font.render(words_str, True, (0, 0, 255), (255, 255, 255))
-    text_rect = text.get_rect(center=((f_width/100)*50, (f_height/100)*50))
+def show_screen():
+    fpsClock.tick(fps)
+    screen.fill((R,G,B))
+    show_words(f"YOULOSE, SCORE {endpoint}",50,40)
+    show_words(f"PRESS ESC TO END",50,60)
+    pygame.display.flip()
+    while True:
+        for event in pygame.event.get(): 
+            if event.type==pygame.QUIT: 
+                pygame.quit()
+            elif event.type==pygame.KEYDOWN: 
+                if event.key==pygame.K_ESCAPE: 
+                    sys.exit() 
+
+
+def show_words(words_str,width,height):
+    font = pygame.font.SysFont("Castellar", 75)
+    text = font.render(words_str, True, (180, 180, 180), (R,G,B))
+    text_rect = text.get_rect(center=((f_width/100)*width, (f_height/100)*height))
     screen.blit(text, text_rect)
 
 class arrow:
@@ -62,16 +77,22 @@ speed=0.25
 
 while  gamee == True:
     fpsClock.tick(fps)
+    show_words(f"SCORE {score}",20,20)
     pygame.display.flip()
+    bgm = pygame.mixer.music.load("Canon_in_D.mp3")
+    # bgm.play(loops=0, start=0.0, fade_ms = 0)
     screen.fill((R,G,B))
     if random.randint(1,spawnSpeed)==1:
         new = arrow(arrowName[random.randint(0,3)])
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
-            sys.exit()
+            show_screen()
+            pygame.quit()
+            
         elif event.type==pygame.KEYDOWN:
             if event.key==pygame.K_ESCAPE:
-                sys.exit()
+                show_screen()
+                pygame.quit()
     keys = pygame.key.get_pressed()
     if len(arrowList)>=1:
         if keys[pygame.K_UP] and arrowList[0].type=="up" and PUp==True:
@@ -127,9 +148,5 @@ while  gamee == True:
             endpoint = score
             lose = True
             gamee = False
-            sys.exit()
-while lose == True:
-    fpsClock.tick(fps)
-    screen.fill((R,G,B))
-    show_words(f"YOULOSE,{endpoint}")
-    pygame.display.flip()
+            show_screen()
+            pygame.quit()
