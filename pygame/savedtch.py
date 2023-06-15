@@ -1,5 +1,3 @@
-
-import sys
 import pygame,random
 
 
@@ -13,9 +11,9 @@ score = 0
 spawnSpeed = 80
 screen = pygame.display.set_mode((_width,_height),32)
 screen.fill((255,255,255))
-gamee = True 
-lose = False
-endpoint = 0
+R = 70
+G = 93
+B = 76
 
 arrowName=["right", "left", "up", "down"]
 arrowList=[]
@@ -23,11 +21,16 @@ arrowList=[]
 nInfo=pygame.display.Info()
 full_screen_size = f_width,f_height = nInfo.current_w,nInfo.current_h
 
+def memeCaronplayer():
+    pygame.mixer_music.load(f"music/Canon_in_D-{score}.mp3") # 載入音樂
+    pygame.mixer_music.set_volume(0.2)# 設置音量爲 0.2
+    pygame.mixer_music.play() # 播放音樂
+    pygame.mixer_music.set_endevent()
 
 def show_screen():
     fpsClock.tick(fps)
     screen.fill((R,G,B))
-    show_words(f"YOULOSE, SCORE {endpoint}",50,40)
+    show_words(f"YOULOSE, SCORE {score}",50,40)
     show_words(f"PRESS ESC TO END",50,60)
     pygame.display.flip()
     while True:
@@ -36,7 +39,7 @@ def show_screen():
                 pygame.quit()
             elif event.type==pygame.KEYDOWN: 
                 if event.key==pygame.K_ESCAPE: 
-                    sys.exit() 
+                    pygame.quit()
 
 
 def show_words(words_str,width,height):
@@ -67,7 +70,7 @@ class arrow:
         if self.type=="down":
             self.y+=speed
         self.bilt_img(self.x,self.y)
-R=G=B=225
+# R=G=B=225
 PUp=True
 PDown=True
 PRight=True
@@ -75,7 +78,7 @@ PLeft=True
 speedUp=False
 speed=0.25
 
-while  gamee == True:
+while True:
     fpsClock.tick(fps)
     show_words(f"SCORE {score}",20,20)
     pygame.display.flip()
@@ -87,51 +90,53 @@ while  gamee == True:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             show_screen()
-            pygame.quit()
-            
         elif event.type==pygame.KEYDOWN:
             if event.key==pygame.K_ESCAPE:
                 show_screen()
-                pygame.quit()
+
     keys = pygame.key.get_pressed()
     if len(arrowList)>=1:
         if keys[pygame.K_UP] and arrowList[0].type=="up" and PUp==True:
             arrowList[0]= None
             arrowList.pop(0)
-            R=random.randint(0,255)
-            G=random.randint(0,255)
-            B=random.randint(0,255)
+            # R=random.randint(0,255)
+            # G=random.randint(0,255)
+            # B=random.randint(0,255)
             score+=1
+            memeCaronplayer()
             PUp=False
         elif not keys[pygame.K_UP] and PUp==False:
             PUp=True
         elif keys[pygame.K_DOWN] and arrowList[0].type=="down" and PDown==True:
             arrowList[0]= None
             arrowList.pop(0)
-            R=random.randint(0,255)
-            G=random.randint(0,255)
-            B=random.randint(0,255)
+            # R=random.randint(0,255)
+            # G=random.randint(0,255)
+            # B=random.randint(0,255)
             score+=1
+            memeCaronplayer()
             PDown=False
         elif not keys[pygame.K_DOWN] and PDown==False:
             PDown=True
         elif keys[pygame.K_RIGHT] and arrowList[0].type=="right" and PRight==True:
             arrowList[0]= None
             arrowList.pop(0)
-            R=random.randint(0,255)
-            G=random.randint(0,255)
-            B=random.randint(0,255)
+            # R=random.randint(0,255)
+            # G=random.randint(0,255)
+            # B=random.randint(0,255)
             score+=1
+            memeCaronplayer()
             PRight=False
         elif not keys[pygame.K_RIGHT] and PRight==False:
             PRight=True
         elif keys[pygame.K_LEFT] and arrowList[0].type=="left" and PLeft==True:
             arrowList[0]= None
             arrowList.pop(0)
-            R=random.randint(0,255)
-            G=random.randint(0,255)
-            B=random.randint(0,255)
+            # R=random.randint(0,255)
+            # G=random.randint(0,255)
+            # B=random.randint(0,255)
             score+=1
+            memeCaronplayer()
             PLeft=False
         elif not keys[pygame.K_LEFT] and PLeft==False:
             PLeft=True
@@ -143,10 +148,7 @@ while  gamee == True:
         speedUp = False
     for i in arrowList:
         i.move(speed)
-        if i.x<0 or i.x>100 or i.y>100 or i.y<0:
+        if i.x<0 or i.x>100 or i.y>100 or i.y<0 or score == 67:
             print(f"score:{score}")
-            endpoint = score
-            lose = True
-            gamee = False
             show_screen()
-            pygame.quit()
+
